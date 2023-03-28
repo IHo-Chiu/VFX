@@ -2,6 +2,7 @@
 import numpy as np
 import argparse
 from utils import load_images, down_sample
+from MTB import mtb
 
 def debevec_HDR_algorithm_1_channel(images, exposures):
     W = np.asarray([i/128 if i <= 128 else (256-i)/128 for i in range(256)], dtype=float)
@@ -66,7 +67,9 @@ def debevec_HDR_algorithm(images, exposures):
     return hdr_images
 
 def main(args):
-    images, exposures = load_images(args.csv_path)
+    images, exposures = load_images(args.csv_path, shifted = args.shifted)
+    if args.shifted == False:
+        images = mtb(images)
     hdr_image = debevec_HDR_algorithm(images, exposures)
 
     with open('data/hdr_image_debevec.npy', 'wb') as f:
@@ -75,5 +78,6 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Debevec HDR Algorithm')
     parser.add_argument('csv_path', help='Image list with exposure')
+    parser.add_argument('--shifted', type=bool, default=False, help='Shifted ot not.')
     args = parser.parse_args()
     main(args)

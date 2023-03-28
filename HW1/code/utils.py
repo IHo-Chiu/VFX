@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 import cv2
 
-def load_images(csv_path):
+def load_images(csv_path, return_images_name=False, shifted=False):
     image_paths = []
     exposures = []
     with open(csv_path, newline='') as csvfile:
@@ -16,10 +16,15 @@ def load_images(csv_path):
 
     images = []
     for image_path in image_paths:
+        if shifted:
+            image_path = 'shifted_'+image_path
         img = np.asarray(Image.open('data/'+image_path))
         images.append(img)
 
-    return images, exposures
+    if return_images_name:
+        return images, exposures, image_paths
+    else:
+        return images, exposures
 
 def down_sample(images, scale=32):
     new_images = []

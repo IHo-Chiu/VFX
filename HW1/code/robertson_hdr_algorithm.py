@@ -2,16 +2,18 @@
 import numpy as np
 import argparse
 from utils import load_images, down_sample
+from MTB import mtb
 
 def robertson_HDR_algorithm_1_channel(images, exposures):
-    W = np.asarray([i/128 if i <= 128 else (256-i)/128 for i in range(256)], dtype=float)
+    W = (np.exp(4) / (np.exp(4) - 1)) * np.exp(-(4 * np.arange(256) / 255 - 2)**2) + (1 / (1 - np.exp(4)))
     G = np.asarray([i/256 for i in range(256)], dtype=float)
-    Z = down_sample(images, scale=32)
+    Z = down_sample(images, scale=8)
     E = np.zeros_like(Z[0], dtype=float)
 
     loss = 100
     pre_loss = 120
     while abs(loss - pre_loss) > 1:
+
         # Step1. assume G is known, find E
         E_up = np.zeros_like(E)
         E_down = np.zeros_like(E)
@@ -24,7 +26,6 @@ def robertson_HDR_algorithm_1_channel(images, exposures):
         E = E_up/E_down
 
         # Step2. assume E is known, find G
-        _, counts = np.unique(Z, return_counts=True)
         G = np.zeros_like(G)
         for i in range(len(Z)):
             z = Z[i]
@@ -33,6 +34,7 @@ def robertson_HDR_algorithm_1_channel(images, exposures):
                 mask = z == j
                 G[j] += np.sum((E * t)[mask])
 
+        _, counts = np.unique(Z, return_counts=True)
         G = G / counts
 
         # Step3. normalize G[128] = 1
@@ -81,7 +83,9 @@ def robertson_HDR_algorithm(images, exposures):
     return hdr_images
 
 def main(args):
-    images, exposures = load_images(args.csv_path)
+    images, exposures = load_images(args.csv_path, shifted = args.shifted)
+    if args.shifted == False:
+        images = mtb(images)
     hdr_image = robertson_HDR_algorithm(images, exposures)
 
     with open('data/hdr_image_robertson.npy', 'wb') as f:
@@ -90,5 +94,6 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Robertson HDR Algorithm')
     parser.add_argument('csv_path', help='Image list with exposure')
+    parser.add_argument('--shifted', type=bool, default=False, help='Shifted ot not.')
     args = parser.parse_args()
     main(args)

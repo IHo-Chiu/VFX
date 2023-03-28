@@ -13,7 +13,7 @@ member
 #### MTB Algotrithm
 
 ```
-python 
+python code/MTB.py data/images.csv
 ```
 
 ### Run HDR Algorithm
@@ -21,13 +21,13 @@ python
 #### 1. Debevec HDR Algorithm
 
 ```
-python code/debevec_hdr_algorithm.py data/images.csv
+python code/debevec_hdr_algorithm.py data/images.csv --shifted=True
 ```
 
 #### 2. Robertson HDR Algorithm
 
 ```
-python code/robertson_hdr_algorithm.py data/images.csv
+python code/robertson_hdr_algorithm.py data/images.csv --shifted=True
 ```
 
 ### Run Tone Mapping

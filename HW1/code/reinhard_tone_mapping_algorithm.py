@@ -2,8 +2,9 @@
 import numpy as np
 from PIL import Image
 import argparse
+import cv2
 
-def heinhard_tone_mapping_algorithm(hdr_image, alpha=0.8):
+def reinhard_tone_mapping_algorithm(hdr_image, alpha=0.8):
 
     # Step1. get luminance
     h, w, c = hdr_image.shape
@@ -40,14 +41,13 @@ def heinhard_tone_mapping_algorithm(hdr_image, alpha=0.8):
 
 def main(args):
     hdr_image = np.load(args.npy_path)
-    hdr_image = hdr_image.astype(float)
 
+    ldr_image = reinhard_tone_mapping_algorithm(hdr_image, alpha=0.8)
+    
     hdr_image = np.clip(255 * hdr_image , 0 , 255).astype(np.uint8)
     
     img = Image.fromarray(np.uint8(hdr_image))
     img.save('data/hdr_image.png')
-
-    ldr_image = heinhard_tone_mapping_algorithm(hdr_image, alpha=0.8)
 
     img = Image.fromarray(np.uint8(ldr_image))
     img.save('data/tone_mapping_image.png')

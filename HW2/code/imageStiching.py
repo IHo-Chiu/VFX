@@ -4,10 +4,10 @@ from PIL import Image
 
 def imageStiching(images, theta_list):
     # stiching
-    big_image = np.zeros((len(images), 1700, 12000, 3))
+    big_image = np.zeros((len(images), 1400, 13000, 3))
     h, w, c = images[0].shape
     original_offset_x = 100
-    original_offset_y = 9000
+    original_offset_y = 10000
 
     offset_x = original_offset_x
     offset_y = original_offset_y

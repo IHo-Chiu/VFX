@@ -11,7 +11,7 @@ from featureDetecting import Harris_detector
 from featureDescription import local_image_descriptor
 
 if __name__ == "__main__":
-    scale = 4
+    scale = 3
     focal_length = 3648
 
     # load images
@@ -25,6 +25,7 @@ if __name__ == "__main__":
     print(f"Warp to cylindrical coordinate...", end='\r')
     new_images = []
     for i in range(len(images)):
+    # for i in range(2):
         print(f"Warp to cylindrical coordinate...{i}", end='\r')
         new_image = cylindricalProjection(images[i] , int(focal_length/scale))
         new_images.append(new_image)

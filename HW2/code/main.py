@@ -24,8 +24,7 @@ if __name__ == "__main__":
     # Warp to cylindrical coordinate
     print(f"Warp to cylindrical coordinate...", end='\r')
     new_images = []
-    # for i in range(len(images)):
-    for i in range(2):
+    for i in range(len(images)):
         print(f"Warp to cylindrical coordinate...{i}", end='\r')
         new_image = cylindricalProjection(images[i] , int(focal_length/scale))
         new_images.append(new_image)

@@ -12,7 +12,7 @@ from featureDescription import local_image_descriptor
 
 if __name__ == "__main__":
     scale = 4
-    focal_length = 4000
+    focal_length = 3648
 
     # load images
     root = "../data/preprocessed"
